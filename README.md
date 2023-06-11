@@ -1,1 +1,1 @@
-# CodigosCplusplus ->Aqui se encontraran codigos en C++ 
+# Usare mucho los namespace para los ADTS, si hay README leelos para poder comprender la estructura
