@@ -1,10 +1,11 @@
 //Para pruebas 
 #include <iostream>
 #include <vector>
+#include "Numero.h"
 using namespace std;
+using namespace Numeros;
 
 int main(){
-	string n = "";
-	if (n == NULL)
-		cout<<"a";
+	Numero numero1(234);
+	cout<<numero1;
 }
