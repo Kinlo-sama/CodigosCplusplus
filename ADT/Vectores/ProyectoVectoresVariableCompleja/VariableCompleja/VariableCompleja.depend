@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1687869170 source:c:\users\pc\desktop\programacion\c++\adt\vectores\pruebas.cpp
+	<iostream>
+	"Vectores.h"
+	"Vectores3d.h"
+
+1687862051 c:\users\pc\desktop\programacion\c++\adt\vectores\vectores.h
+	<iostream>
+	<cmath>
+
+1687871232 c:\users\pc\desktop\programacion\c++\adt\vectores\vectores3d.h
+	"Vectores.h"
+
+1687871233 source:c:\users\pc\desktop\programacion\c++\adt\vectores\vectores3d.cpp
+	"Vectores3D.h"
+
