@@ -37,7 +37,7 @@ public:
     static const Vectores3d Zero;
     double productoEscalar(Vectores3d b);
     Vectores3d producto_cruz(Vectores3d b);
-    double norma();
+    double static norma(Vectores3d b);
     static Vectores3d unitario(Vectores3d v);
     double comp_de(Vectores3d b);
     double distanciaPuntos(Vectores3d v);
@@ -46,6 +46,8 @@ public:
     bool paralela_con(Vectores3d b);
     bool perpendiculares(Vectores3d b);
     double anguloEntre(Vectores3d b);
+    double areaFormadoPor(Vectores3d b);
+    double volumenFormadoPor(Vectores3d b,Vectores3d c);
     //*********************************************Angulos directores
     double anguloDirectorAlpha();
     double anguloDirectorBeta();

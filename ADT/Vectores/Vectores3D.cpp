@@ -47,12 +47,12 @@ double Vectores3d::productoEscalar(Vectores3d b){//Solo como recordatorio a * a 
     return (getX() * b.getX()) + (getY() * b.getY()) + (getZ() * b.getZ());
 }
 
-double Vectores3d::norma(){//O magnitud
-    return std::sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
+double Vectores3d::norma(Vectores3d b){//O magnitud
+    return std::sqrt(b.getX() * b.getX() + b.getY() * b.getY() + b.getZ() * b.getZ());
 }
 
 Vectores3d Vectores3d::unitario(Vectores3d v){//El vector unitario es un vector con magnitud uno de *this
-    return Vectores3d(v.getX() / v.norma(),v.getY() / v.norma(),v.getZ() / v.norma());
+    return Vectores3d(v.getX() / norma(v),v.getY() / norma(v),v.getZ() / norma(v));
 }
 
 double Vectores3d::comp_de(Vectores3d b){//El componente que forma parte de b, ver mejores visualizacion en Wikipedia para entenderlo
@@ -74,6 +74,10 @@ Vectores3d Vectores3d::proyeccion_sobre(Vectores3d b){
     return Vectores3d::unitario(b) * comp_de(b);
 }
 
+double Vectores3d::volumenFormadoPor(Vectores3d b,Vectores3d c){
+    Vectores3d productoC = b.producto_cruz(c);
+    return productoEscalar(productoC);
+}
 //Producto escalar de axb  = ||a||*||b|| * sen(theta) * n; donde n es el
 Vectores3d Vectores3d::producto_cruz(Vectores3d b){
 //Para evitarnos los problemas del angulo utilizaremos otra forma de calcular axb
@@ -88,7 +92,22 @@ Vectores3d Vectores3d::producto_cruz(Vectores3d b){
 //Los angulos que se generan entre dos vectores son obtusos y agudos por ende no hace falta preocuparnos por mayores a PI
     return vn * n;
 */
-//La cual es de la siguiente manera
+//La cual es de la siguiente manera utilizando los coefactores de la primera fila de la siguiente matriz
+/*
+i j k      i  j  k
+a b c = > x1 y1 z1
+d e f     x2 y2 z2
+------------------------
+=> i = b * f - c * e
+=> i = y1 * z2 - z1 * y2
+------------------------
+=> j = -(a * f - c * d)
+=> j = -(x1 * z2 - z1 * x2)
+------------------------
+=> k = a * e - b * d
+=> k = x1 * y2 - y2 * x2
+-----------------------
+*/
     double i = getY() * b.getZ() - getZ() * b.getY();
     double j = getX() * b.getZ() - getZ() * b.getX();
     double k = getX() * b.getY() - getY() * b.getX();
@@ -107,6 +126,11 @@ double Vectores3d::anguloEntre(Vectores3d b){
     double numerador = productoEscalar(b);
     double denominador = std::sqrt(productoEscalar(*this)) * std::sqrt(b.productoEscalar(b));
     return std::acos(numerador / denominador);
+}
+
+double Vectores3d::areaFormadoPor(Vectores3d b){
+    Vectores3d producto(producto_cruz(b));
+    return norma(producto);
 }
 //Angulos directores*******************************************************************************
 double Vectores3d::anguloDirectorAlpha(){//Marca el angulo entre i y la cordenada x del vector tridimensional

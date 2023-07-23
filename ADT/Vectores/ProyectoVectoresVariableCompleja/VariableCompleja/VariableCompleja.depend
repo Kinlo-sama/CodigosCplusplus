@@ -4,13 +4,13 @@
 	"Vectores.h"
 	"Vectores3d.h"
 
-1687862051 c:\users\pc\desktop\programacion\c++\adt\vectores\vectores.h
+1687893357 c:\users\pc\desktop\programacion\c++\adt\vectores\vectores.h
 	<iostream>
 	<cmath>
 
-1687871232 c:\users\pc\desktop\programacion\c++\adt\vectores\vectores3d.h
+1687893218 c:\users\pc\desktop\programacion\c++\adt\vectores\vectores3d.h
 	"Vectores.h"
 
-1687871233 source:c:\users\pc\desktop\programacion\c++\adt\vectores\vectores3d.cpp
+1687893252 source:c:\users\pc\desktop\programacion\c++\adt\vectores\vectores3d.cpp
 	"Vectores3D.h"
 

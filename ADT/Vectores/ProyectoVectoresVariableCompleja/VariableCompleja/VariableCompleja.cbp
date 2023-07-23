@@ -31,6 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="../../Vectores.h" />
+		<Unit filename="../../Vectores3D.cpp" />
+		<Unit filename="../../Vectores3D.h" />
+		<Unit filename="../../pruebas.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

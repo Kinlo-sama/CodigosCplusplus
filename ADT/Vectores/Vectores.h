@@ -51,11 +51,11 @@ public:
         return Vector(-x,-y);
     }
     //***************************************FIN OPERACIONES ARITMETICAS CON VECTORES
-    virtual double norma(){//Magnitud o longitud
-        return std::sqrt(x*x + y*y);
+     static double norma(Vector b){//Magnitud o longitud
+        return std::sqrt(b.getX()*b.getX() + b.getY()*b.getY());
     }
     static Vector unitario(Vector b){
-        Vector resultado(b.getX() / b.norma(),b.getY() / b.norma());
+        Vector resultado(b.getX() / norma(b),b.getY() / norma(b));
         return resultado;
     }
 

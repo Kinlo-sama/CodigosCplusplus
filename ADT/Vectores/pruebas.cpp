@@ -20,7 +20,8 @@ int main(){
          <<"El componenete de a sobre b es:"<<a.comp_de(b)<<endl
          <<"El componente de b sobre a es:"<<b.comp_de(a)<<endl
          <<"Y la proyeccion de a sobre b es:"<<a.proyeccion_sobre(b)<<endl
-         <<"El producto punto de axb:"<<a.producto_cruz(b)<<endl;
+         <<"El producto punto de axb:"<<a.producto_cruz(b)<<endl
+         <<"El area formado por los vectores a y b es:"<<a.areaFormadoPor(b)<<endl;
 
 
 }

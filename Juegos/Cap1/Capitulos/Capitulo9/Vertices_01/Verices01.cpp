@@ -1,10 +1,29 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
+
+#include <random>
 int main(){
+    std::random_device rd;
+    std::mt19937 generador(rd());
+    int min = 1;
+    int max = 500;
+    std::uniform_int_distribution<int> distribution(min,max);
+
     sf::ContextSettings configuracion;
     configuracion.antialiasingLevel = 8;
     //Para crear un vertice
-    sf::Vertex vertice(sf::Vector2f(10.f,15.f),sf::Color(12,34,34),sf::Vector2f(100.f,100.f));
+    std::vector<sf::Vertex> puntos;
+    for(int i = 0; i < 1000; ++i){
+        double x = distribution(generador);
+        double y = distribution(generador);
+        puntos.push_back(sf::Vertex(sf::Vector2f(x,y)));
+    }
+    std::vector<sf::Vertex> lineas;
+    for(int i = 0; i < 1000; ++i){
+        double x_1 = distribution(generador), x_2 = distribution(generador);
+        double y_1 = distribution(generador), y_2 = distribution(generador);
+        lineas.push_back(sf::Vertex(sf::Vector2f(x_1,y_1),sf::Color(y_2,x_1,x_2),sf::Vector2f(x_2,y_2)));
+    }
     //Para definir una primitiva
     sf::VertexArray triangulo(sf::Triangles,3);
     //Definimos las caracteristicas de cada vertice
@@ -36,10 +55,10 @@ int main(){
         while(ventana.pollEvent(evento)){
             if(evento.type == sf::Event::Closed)
                 ventana.close();
-            ventana.clear(sf::Color::White);
+            ventana.clear(sf::Color::Black);
             //ventana.draw(triangulo);//Usando VertexArray
             //ventana.draw(&verticeVector[0],verticeVector.size(),sf::Triangles); //Usando  un vector
-            ventana.draw(vertices,3,sf::Triangles);
+            ventana.draw(&lineas[0],lineas.size(),sf::Lines);
             ventana.display();
         }
     }
