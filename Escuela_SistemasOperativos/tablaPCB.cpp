@@ -67,6 +67,9 @@ node_PCB * DATA(int nt,int np,int t,int c,int cm,int tp,int f,int tsu,int e){
         node->recursos = 0;
     }
     node->ciclos_sc = 0;
+    node->sem = 0;
+    node->w_s = 1;
+    node->s_s = 0;
     return node;
 }
 
@@ -111,10 +114,12 @@ void ver_PCB_sem(){
     printf("\n");
     printf("\t\t\t\t\t\t\tTABLA PCM_SEM\n");
     PCB_sem *auxP = P_sem;
-    printf("%-15s%-15s%-15s%-15s%-10s%-15s%-15s%-15s\n","Proceso","T.Llegada","Ciclos(ms)","CPU/E/O","Estado","Inicio_SC","Duracion_SC","Ciclos_sc");
+    printf("%-15s%-15s%-15s%-10s%-15s%-15s%-15s%-15s%-15s%-15s\n",
+           "Proceso","T.Llegada","Ciclos(ms)","Estado","Inicio_SC","Duracion_SC","Ciclos_sc","Semaforo","Wait(sem)","Signal(sem)");
     while(auxP != NULL){
         node_PCB *aux = auxP->item_sc;
-        printf(" J%02dP%02d%17d%15d%13s%14d%13d%17d%13d\n",aux->name_task,aux->name_page,aux->time,aux->cycles,aux->type_process,aux->estado,aux->begin_sc,aux->duration_sc,aux->ciclos_sc);
+        printf(" J%02dP%02d%16d%17d%11d%13d%17d%13d%14d%16d%17d\n",
+               aux->name_task,aux->name_page,aux->time,aux->cycles,aux->estado,aux->begin_sc,aux->duration_sc,aux->ciclos_sc,aux->sem,aux->w_s,aux->s_s);
         auxP = auxP->next;
     }
 }

@@ -17,6 +17,9 @@ node_PCB * DATOS(node_PCB * otroNodo){
     nuevo->time = otroNodo->time;
     nuevo->trp = otroNodo->trp;
     nuevo->type_process = otroNodo->type_process;
+    nuevo->sem = otroNodo->sem;
+    nuevo->w_s = otroNodo->w_s;
+    nuevo->s_s = otroNodo->s_s;
     return nuevo;
 }
 
@@ -26,17 +29,22 @@ void meter_PCB_sem(node_PCB * item){
     anterior_C = P_PCB;
     if(item == current){
         P_PCB = P_PCB->next;
-    }
-    else{
-        current = current->next;
-        while(current != NULL){
-            if(current == item){
-                anterior_C->next = current->next;
-            }
-            anterior_C = anterior_C->next;
-            current = current->next;
+    }else if(item == Q_PCB){
+            New_PCB = DATOS(item);
+            New_PCB->next = NULL;
+            Q_PCB->next = New_PCB;
+            Q_PCB = New_PCB;
         }
-    }
+        else{
+            current = current->next;
+            while(current != NULL){
+                if(current == item){
+                    anterior_C->next = current->next;
+                }
+                anterior_C = anterior_C->next;
+                current = current->next;
+            }
+        }
     if(P_sem == NULL){
         P_sem = (PCB_sem * )malloc(sizeof(PCB_sem));
         P_sem->item_sc = DATOS(item);
@@ -69,6 +77,76 @@ void meter_Ahorro(int a){
     }
 }
 
+void wait(){
+    --P_sem->item_sc->sem;
+    if(P_sem->item_sc->sem < 0){
+        --P_sem->item_sc->cycles;
+        --P_sem->item_sc->duration_sc;
+        if(P_sem->item_sc->cycles == 0){
+            P_sem->item_sc->estado = 5;
+            P_sem->item_sc->sem = 0;
+        }
+        if(P_sem->item_sc->duration_sc == 0){
+            P_sem->item_sc->sem = 0;
+        }
+    }
+}
+
+void signal(){
+    ++P_sem->item_sc->sem;
+    if(P_sem->item_sc->sem > 0){
+        P_sem->item_sc->sem = 1;
+        P_sem->item_sc->s_s = 1;
+        P_sem->item_sc->w_s = 0;
+    }
+}
+
+int semaforo(){
+    int estado_5 = 0;
+    if(P_sem != NULL){
+        if(P_sem->item_sc->estado == 5)
+            estado_5 = 1;
+        if(P_sem->item_sc->s_s == 1){
+            int t_l = P_sem->item_sc->time;//ubicamos el tiempo de llegada del proceso i/o
+            node_PCB *current,*ant_current;
+            current = P_PCB;
+            ant_current = P_PCB;
+            if(t_l == 0){
+                P_sem->item_sc->next = P_PCB;
+                P_PCB = P_sem->item_sc;
+            }else if(t_l == Q_PCB->time+1){
+                    P_sem->item_sc->next = NULL;
+                    Q_PCB->next = P_sem->item_sc;
+                    Q_PCB = P_sem->item_sc;
+                }
+                    else{
+                        current = current->next;
+                        while(current != NULL){
+                            if(t_l == current->time - 1){
+                                New_PCB = DATOS(P_sem->item_sc);
+                                ant_current->next = New_PCB;
+                                New_PCB->next = current;
+                            }
+                            ant_current = ant_current->next;
+                            current = current->next;
+                        }
+                    }
+            if(P_sem->next == NULL){
+                P_sem = NULL;
+            }else{
+                P_sem = P_sem->next;
+            }
+        }
+    }
+    if(P_sem != NULL){
+        wait();
+        signal();
+    }
+    return estado_5;
+}
+
+
+
 void ALGORITMO_RR(){
     node_PCB * current = P_PCB;
     int in_state_5 = 0;
@@ -84,6 +162,7 @@ void ALGORITMO_RR(){
                 bool acabo = true;
                 while(current->cycles > 0){
                     --current->cycles;
+                    in_state_5 += semaforo();
                     if(current->begin_sc != 0)
                         ++current->ciclos_sc;
                     --quantums;
@@ -108,6 +187,7 @@ void ALGORITMO_RR(){
             if((current->cycles - QUANTUMS) > 0){//**************Al usar todos los quantums no podrias ir al estado 5
                 while(quantums--){
                     --current->cycles;
+                    in_state_5 += semaforo();
                     if(current->begin_sc != 0)
                         ++current->ciclos_sc;
                     if(current->ciclos_sc == current->begin_sc && current->begin_sc != 0){

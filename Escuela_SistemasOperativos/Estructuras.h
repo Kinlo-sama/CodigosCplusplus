@@ -32,6 +32,10 @@ struct node_PCB{
     int duration_sc;
     node_PCB * next;
     int ciclos_sc;
+    //Var semaforo
+    int sem;
+    int w_s;
+    int s_s;
 };
 
 struct PCB_sem{
