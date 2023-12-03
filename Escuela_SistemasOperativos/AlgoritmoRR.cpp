@@ -21,7 +21,7 @@ node_PCB * DATOS(node_PCB * otroNodo){
 }
 
 void meter_PCB_sem(node_PCB * item){
-    node_PCB *current,*anterior_C;
+    node_PCB *current,*anterior_C;//siguiente y el anterior a siguiente
     current = P_PCB;
     anterior_C = P_PCB;
     if(item == current){
@@ -72,21 +72,18 @@ void meter_Ahorro(int a){
 void ALGORITMO_RR(){
     node_PCB * current = P_PCB;
     int in_state_5 = 0;
-    int ahorro_ronda = 0;
-    int tiempos = 0;
+    int ahorro_ronda = 0;//ignorar por ahora en semaforo
+    int tiempos = 0;//ignorado por ahora en semaforo
     int quantums = QUANTUMS;
     while(in_state_5 != (Q_PCB->time+1)){
         bool salio = false;
         if(current->estado == 2 || current->estado == 4){
             current->estado = 3;
             VER_PCB(quantums);
-            if((current->cycles-QUANTUMS) <= 0){//***********************************
-                int cont = 0;
+            if((current->cycles-QUANTUMS) <= 0){//****************Al usar todos los quantums podriamos ir al estado 5
                 bool acabo = true;
-
                 while(current->cycles > 0){
                     --current->cycles;
-                    ++cont;
                     if(current->begin_sc != 0)
                         ++current->ciclos_sc;
                     --quantums;
@@ -97,23 +94,22 @@ void ALGORITMO_RR(){
                     }
                     VER_PCB(quantums);
                 }
-                if(acabo)
+                if(acabo){
                     current->estado = 5;
+                    ++in_state_5;//Si entra en estado significa que un proceso acabo
+                }
                 else
                     current->estado = 4;
-                quantums -= current->cycles;
-                tiempos += current->cycles;
+
+                tiempos += current->cycles;//Lo dejamos por ahora
                 ahorro_ronda += QUANTUMS - current->cycles;
-                ++in_state_5;
+
             }
-            if((current->cycles - QUANTUMS) > 0){//***********************************
-                int cont = 0;
-                while(cont != QUANTUMS){
+            if((current->cycles - QUANTUMS) > 0){//**************Al usar todos los quantums no podrias ir al estado 5
+                while(quantums--){
                     --current->cycles;
-                    ++cont;
                     if(current->begin_sc != 0)
                         ++current->ciclos_sc;
-                    --quantums;
                     if(current->ciclos_sc == current->begin_sc && current->begin_sc != 0){
                         salio = true;
                         break;
@@ -124,8 +120,8 @@ void ALGORITMO_RR(){
                 //quantums = 0;
                 current->estado = 4;
             }
-            VER_PCB(quantums);
-            if(current->cycles == 0){
+            VER_PCB(++quantums);
+            if(current->cycles == 0){//************No sirve por ahora pero lo dejamos por si acaso lo necesitaramos
                 current->trp = tiempos - current->time;
             }
         }
