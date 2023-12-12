@@ -11,6 +11,25 @@
 #define MAX_CICLOS 15
 #define QUANTUMS 5
 
+
+/*
+INTERRUPCIONES
+00 division por 0
+02 interrupcion no enmascarable
+08 generada por el tictac del reloj del hardware
+14 señala atencion al diskette
+16 Serivicio de video
+20 Invoca servicios de comunicaciones de la ROM BIOS
+25 Reset
+27 Interrupcion de la ROM BIOS para Ctrl-Break
+28 Interrupcion generada con cada pulso de reloj
+47 Interrupcion multiple del DOS
+
+
+*/
+
+
+
 struct ahorrosQ{
     int ahorros;
     ahorrosQ * next;
@@ -36,6 +55,8 @@ struct node_PCB{
     int sem;
     int w_s;
     int s_s;
+    //Interrupciones
+    int interrupcion;
 };
 
 struct PCB_sem{

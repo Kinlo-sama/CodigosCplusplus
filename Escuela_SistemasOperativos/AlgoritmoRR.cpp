@@ -20,7 +20,32 @@ node_PCB * DATOS(node_PCB * otroNodo){
     nuevo->sem = otroNodo->sem;
     nuevo->w_s = otroNodo->w_s;
     nuevo->s_s = otroNodo->s_s;
+    nuevo->interrupcion = otroNodo->interrupcion;
     return nuevo;
+}
+
+void sacar_RR(node_PCB * item){
+    node_PCB *current,*anterior_C;//siguiente y el anterior a siguiente
+    current = P_PCB;
+    anterior_C = P_PCB;
+    if(item == current){
+        P_PCB = P_PCB->next;
+    }else if(item == Q_PCB){
+            New_PCB = DATOS(item);
+            New_PCB->next = NULL;
+            Q_PCB->next = New_PCB;
+            Q_PCB = New_PCB;
+        }
+        else{
+            current = current->next;
+            while(current != NULL){
+                if(current == item){
+                    anterior_C->next = current->next;
+                }
+                anterior_C = anterior_C->next;
+                current = current->next;
+            }
+        }
 }
 
 void meter_PCB_sem(node_PCB * item){
@@ -155,6 +180,7 @@ void ALGORITMO_RR(){
     int quantums = QUANTUMS;
     while(in_state_5 != (Q_PCB->time+1)){
         bool salio = false;
+        bool interrupcion = false;
         if(current->estado == 2 || current->estado == 4){
             current->estado = 3;
             VER_PCB(quantums);
@@ -166,9 +192,98 @@ void ALGORITMO_RR(){
                     if(current->begin_sc != 0)
                         ++current->ciclos_sc;
                     --quantums;
+                    /*
                     if(current->ciclos_sc == current->begin_sc && current->begin_sc != 0){
                         acabo = false;
                         salio = true;
+                        break;
+                    }
+                    */
+                    if(current->begin_sc != 0 && current->ciclos_sc == current->begin_sc){
+                        if(current->interrupcion ==  14 || current->interrupcion == 16){
+                            acabo = false;
+                            salio = true;
+                            break;
+                        }
+                        else{
+                            switch(current->interrupcion){
+                            case 0:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                printf("Error...division entre 0");
+                                getchar();
+                                system("cls");
+                                interrupcion = true;
+                                break;
+                            case 2:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                printf("Interrupcion no enmascarable");
+                                getchar();
+                                system("cls");
+                                interrupcion = true;
+                                break;
+                            case 8:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                printf("Tictac del reloj de hardware");
+                                getchar();
+                                system("cls");
+                                interrupcion = true;
+                                break;
+                            case 14:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                printf("¡Atencion al diskette!");
+                                getchar();
+                                system("cls");
+                                interrupcion = true;
+                                break;
+                            case 20:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                printf("Invoca servicios de comunicaciones de la ROM BIOS");
+                                getchar();
+                                system("cls");
+
+                                break;
+                            case 25:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                printf("RESET");
+                                getchar();
+                                system("cls");
+                                interrupcion = true;
+                                break;
+                            case 27:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                interrupcion = true;
+                                printf("Interrupcion de la ROM BIOS para Ctrl-Break");
+                                getchar();
+                                system("cls");
+
+                                break;
+                            case 28:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                printf("Interrupcion generada con cada pulso de reloj");
+                                getchar();
+                                system("cls");
+                                break;
+                            case 47:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                printf("Interrupcion miltiple del DOS");
+                                getchar();
+                                system("cls");
+                                interrupcion = true;
+                                break;
+                            }
+                        }
+                    }
+                    if(interrupcion){
+                        current->estado = 5;
                         break;
                     }
                     VER_PCB(quantums);
@@ -189,16 +304,99 @@ void ALGORITMO_RR(){
                     --current->cycles;
                     in_state_5 += semaforo();
                     if(current->begin_sc != 0)
-                        ++current->ciclos_sc;
-                    if(current->ciclos_sc == current->begin_sc && current->begin_sc != 0){
-                        salio = true;
+                        ++current->ciclos_sc;//Aqui copeo
+                    if(current->begin_sc != 0 && current->ciclos_sc == current->begin_sc){
+                        if(current->interrupcion ==  14 || current->interrupcion == 16){
+                            salio = true;
+                            break;
+                        }
+                        else{
+                            switch(current->interrupcion){
+                            case 0:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                printf("Error...division entre 0");
+                                getchar();
+                                system("cls");
+                                interrupcion = true;
+                                break;
+                            case 2:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                printf("Interrupcion no enmascarable");
+                                getchar();
+                                system("cls");
+                                interrupcion = true;
+                                break;
+                            case 8:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                printf("Tictac del reloj de hardware");
+                                getchar();
+                                system("cls");
+                                interrupcion = true;
+                                break;
+                            case 14:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                printf("¡Atencion al diskette!");
+                                getchar();
+                                system("cls");
+                                interrupcion = true;
+                                break;
+                            case 20:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                printf("Invoca servicios de comunicaciones de la ROM BIOS");
+                                getchar();
+                                system("cls");
+
+                                break;
+                            case 25:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                printf("RESET");
+                                getchar();
+                                system("cls");
+                                interrupcion = true;
+                                break;
+                            case 27:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                interrupcion = true;
+                                printf("Interrupcion de la ROM BIOS para Ctrl-Break");
+                                getchar();
+                                system("cls");
+
+                                break;
+                            case 28:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                printf("Interrupcion generada con cada pulso de reloj");
+                                getchar();
+                                system("cls");
+                                break;
+                            case 47:
+                                interrupcion = true;
+                                while (getchar() != '\n');
+                                printf("Interrupcion multiple del DOS");
+                                getchar();
+                                system("cls");
+                                interrupcion = true;
+                                break;
+                            }
+                        }
+                    }
+                    if(interrupcion){
+                        current->estado = 5;
                         break;
                     }
                     VER_PCB(quantums);
                 }
                 //current->cycles -= quantums;
                 //quantums = 0;
-                current->estado = 4;
+                if(!interrupcion)
+                    current->estado = 4;
             }
             VER_PCB(++quantums);
             if(current->cycles == 0){//************No sirve por ahora pero lo dejamos por si acaso lo necesitaramos
@@ -216,6 +414,8 @@ void ALGORITMO_RR(){
         current = current->next;
         if(salio)
             meter_PCB_sem(aux);
+        if(interrupcion)
+            sacar_RR(aux);
         quantums = QUANTUMS;
         if(current == NULL){
             node_PCB * actual = P_PCB;

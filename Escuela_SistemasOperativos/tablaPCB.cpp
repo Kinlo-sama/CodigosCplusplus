@@ -28,6 +28,7 @@ void VER_PCB(){
 }
 
 node_PCB * DATA(int nt,int np,int t,int c,int cm,int tp,int f,int tsu,int e){
+    int interrupciones[] = {0,2,8,14,16,20,25,27,28,47};
     node_PCB * node;
     node = (node_PCB *)malloc(sizeof(node_PCB));
     node->type_process = (char*)malloc(15 *sizeof(char));
@@ -44,9 +45,12 @@ node_PCB * DATA(int nt,int np,int t,int c,int cm,int tp,int f,int tsu,int e){
             --tam_sc;
         }
         node->duration_sc = tam_sc;
+        int indice = rand()%9 + 1;
+        node->interrupcion = interrupciones[indice];
     }else{
         node->begin_sc = 0;
         node->duration_sc  = 0;
+        node->interrupcion = -1;
     }
     if(tp == 0){
         strcpy(node->type_process,"CPU");
@@ -70,6 +74,7 @@ node_PCB * DATA(int nt,int np,int t,int c,int cm,int tp,int f,int tsu,int e){
     node->sem = 0;
     node->w_s = 1;
     node->s_s = 0;
+
     return node;
 }
 
@@ -132,9 +137,10 @@ void VER_PCB(int q){
     printf("\t\t\t\t\t\t\tTABLA PCM\n");
     node_PCB *aux = P_PCB;
     printf("Quantums:%d\n",q);
-    printf("%-15s%-15s%-15s%-15s%-10s%-15s%-15s%-15s\n","Proceso","T.Llegada","Ciclos(ms)","CPU/E/O","Estado","Inicio_SC","Duracion_SC","Ciclos_sc");
+    printf("%-15s%-15s%-15s%-15s%-10s%-15s%-15s%-15s%-15s\n",
+           "Proceso","T.Llegada","Ciclos(ms)","CPU/E/O","Estado","Codigo_In","Ciclo_In","Duracion_In","Ciclos_In");
     while(aux != NULL){
-        printf(" J%02dP%02d%17d%15d%13s%14d%13d%17d%13d\n",aux->name_task,aux->name_page,aux->time,aux->cycles,aux->type_process,aux->estado,aux->begin_sc,aux->duration_sc,aux->ciclos_sc);
+        printf(" J%02dP%02d%17d%15d%13s%14d%13d%14d%18d%13d\n",aux->name_task,aux->name_page,aux->time,aux->cycles,aux->type_process,aux->estado,aux->interrupcion,aux->begin_sc,aux->duration_sc,aux->ciclos_sc);
         aux = aux->next;
     }
     ver_PCB_sem();
