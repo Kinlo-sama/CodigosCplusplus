@@ -289,7 +289,6 @@ void ALGORITMO_RR(){
                     VER_PCB(quantums);
                 }
                 if(acabo){
-                    current->estado = 5;
                     ++in_state_5;//Si entra en estado significa que un proceso acabo
                 }
                 else
@@ -388,7 +387,7 @@ void ALGORITMO_RR(){
                         }
                     }
                     if(interrupcion){
-                        current->estado = 5;
+                        ++in_state_5;
                         break;
                     }
                     VER_PCB(quantums);
